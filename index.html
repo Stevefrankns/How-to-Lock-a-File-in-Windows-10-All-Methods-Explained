@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>How to Lock a File in Windows 10 — All Methods Explained</title>
+<meta content="The complete technical guide to locking a file in Windows 10. Compare built-in NTFS permissions, EFS, and third-party software methods to secure your data." name="description"/>
+<!-- Replace YOUR-DOMAIN.com before launch -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&amp;family=Syne:wght@700;800&amp;display=swap" rel="stylesheet"/>
+<style>
+:root {
+    --black: #0A0A0A;
+    --dark: #111111;
+    --yellow: #F5E642;
+    --paper: #FAFAFA;
+    --white: #FFFFFF;
+    --body-dark: #F5F5F0;
+    --body-light: #0A0A0A;
+    --muted-dark: rgba(245,245,240,0.72);
+    --muted-light: rgba(10,10,10,0.68);
+    --line: rgba(10,10,10,0.14);
+    --line-dark: rgba(255,255,255,0.18);
+    --font-heading: 'Syne', system-ui, sans-serif;
+    --font-body: 'DM Sans', system-ui, sans-serif;
+    --max-reading-width: 860px;
+    --max-wide-width: 1180px;
+    --section-padding-v: 76px;
+    --radius-card: 0px;
+    --shadow-card: 0 24px 60px rgba(0, 0, 0, 0.18);
+    --transition-speed: 100ms;
+    --split: 50%;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+    font-family: var(--font-body);
+    color: var(--body-light);
+    background: var(--paper);
+    line-height: 1.72;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+
+h1, h2, h3, h4, .font-heading {
+    font-family: var(--font-heading);
+    line-height: 0.96;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: -0.045em;
+}
+h1 {
+    font-size: clamp(44px, 7vw, 72px);
+    color: var(--body-dark);
+    margin-bottom: 1.4rem;
+    max-width: 760px;
+}
+h2 {
+    font-size: clamp(34px, 5vw, 56px);
+    color: inherit;
+    margin-bottom: 1.4rem;
+    max-width: 900px;
+}
+h3 {
+    font-size: clamp(24px, 3vw, 34px);
+    color: inherit;
+    margin-bottom: 1rem;
+}
+h4 {
+    font-size: 18px;
+    color: inherit;
+    margin-bottom: 0.6rem;
+    letter-spacing: -0.02em;
+}
+p { margin-bottom: 1.45rem; }
+a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; transition: all var(--transition-speed) linear; }
+a:hover { color: var(--yellow); }
+ul, ol { margin-bottom: 1.5rem; padding-left: 1.4rem; }
+li { margin-bottom: 0.58rem; }
+strong { font-weight: 700; }
+em { font-style: italic; }
+code {
+    background: rgba(245,230,66,0.22);
+    border: 1px solid rgba(10,10,10,0.15);
+    padding: 0.08rem 0.32rem;
+    font-size: 0.9em;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+.container-reading { max-width: var(--max-reading-width); margin: 0 auto; padding: 0 20px; }
+.container-wide { max-width: var(--max-wide-width); margin: 0 auto; padding: 0 20px; }
+.section { padding: var(--section-padding-v) 0; }
+.bg-tint { background-color: var(--yellow); color: var(--black); padding: 28px; border: 1px solid var(--black); }
+.bg-dark { background-color: var(--dark); color: var(--body-dark); }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+
+/* Buttons: 100ms CTA invert */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 13px 22px;
+    border-radius: 999px;
+    font-weight: 800;
+    font-family: var(--font-heading);
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    cursor: pointer;
+    border: 2px solid currentColor;
+    transition: background var(--transition-speed) linear, color var(--transition-speed) linear, transform var(--transition-speed) linear, border-color var(--transition-speed) linear;
+    text-decoration: none;
+    line-height: 1;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn-fill, .btn-accent {
+    background: var(--yellow);
+    color: var(--black);
+    border-color: var(--yellow);
+}
+.btn-fill:hover, .btn-accent:hover {
+    background: var(--black);
+    color: var(--yellow);
+    border-color: var(--black);
+}
+.btn-outline {
+    background: var(--black);
+    color: var(--yellow);
+    border-color: var(--black);
+}
+.btn-outline:hover {
+    background: var(--yellow);
+    color: var(--black);
+    border-color: var(--yellow);
+}
+
+/* Header & Nav */
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: var(--black);
+    color: var(--body-dark);
+    border-bottom: 1px solid rgba(255,255,255,0.14);
+    padding: 12px 0;
+}
+.nav-inner { display: flex; justify-content: space-between; align-items: center; gap: 24px; }
+.site-logo {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 12px;
+    color: var(--body-dark);
+    font-family: var(--font-heading);
+    font-size: 20px;
+    line-height: 1;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: -0.035em;
+    text-decoration: none;
+    white-space: nowrap;
+}
+.site-logo img, .brand-mark {
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px;
+    border: 1px solid rgba(245,230,66,0.72);
+    background: var(--yellow);
+    object-fit: contain !important;
+    padding: 5px;
+    margin: 0 !important;
+    border-radius: 0 !important;
+}
+.nav-links { display: flex; align-items: center; gap: 22px; }
+.nav-links a {
+    color: rgba(245,245,240,0.78);
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+}
+.nav-links a:hover { color: var(--yellow); }
+.nav-links .btn {
+    padding: 8px 14px !important;
+    color: var(--black);
+    background: var(--yellow);
+    border-color: var(--yellow);
+}
+.nav-links .btn:hover {
+    color: var(--yellow);
+    background: var(--black);
+}
+.mobile-menu-btn {
+    display: none;
+    background: var(--yellow);
+    color: var(--black);
+    border: 0;
+    width: 42px;
+    height: 42px;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* Hero: split shift — fixed balanced layout */
+.hero {
+    --split: 50%;
+    position: relative;
+    min-height: calc(100svh - 66px);
+    padding: 0;
+    overflow: hidden;
+    background:
+        linear-gradient(90deg,
+            var(--black) 0 var(--split),
+            #ffffff var(--split) calc(var(--split) + 1px),
+            var(--yellow) calc(var(--split) + 1px) 100%);
+    border-bottom: 0;
+}
+.hero::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--split);
+    width: 1px;
+    background: #fff;
+    pointer-events: none;
+    box-shadow: 0 0 34px rgba(255,255,255,0.28);
+}
+.hero .container-reading {
+    width: 100%;
+    max-width: none;
+    min-height: calc(100svh - 66px);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(360px, 1fr);
+    align-items: stretch;
+    padding: 0;
+}
+.hero-left, .hero-right {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: clamp(48px, 6vw, 84px) clamp(28px, 7vw, 96px);
+}
+.hero-left {
+    color: var(--body-dark);
+    align-items: flex-start;
+}
+.hero-left > * {
+    max-width: 620px;
+}
+.hero-left h1 {
+    font-size: clamp(40px, 4.9vw, 66px);
+    line-height: 0.9;
+    letter-spacing: -0.055em;
+    text-wrap: balance;
+    overflow-wrap: normal;
+    margin-bottom: 1.35rem;
+}
+.hero-left p {
+    max-width: 560px;
+    font-size: 15px;
+    line-height: 1.72;
+}
+.hero-left p, .hero-left .meta-bar, .hero-left .breadcrumb {
+    color: var(--muted-dark);
+}
+.hero-right {
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    color: var(--black);
+    overflow: hidden;
+}
+.hero-right::before {
+    content: "";
+    position: absolute;
+    inset: 8% 8% auto auto;
+    width: min(58%, 430px);
+    aspect-ratio: 1;
+    border: 2px solid rgba(10,10,10,0.92);
+    background:
+        linear-gradient(135deg, rgba(10,10,10,0.12) 0 25%, transparent 25% 50%, rgba(10,10,10,0.12) 50% 75%, transparent 75%),
+        radial-gradient(circle at 35% 35%, rgba(255,255,255,0.35), transparent 48%);
+    background-size: 34px 34px, 100% 100%;
+    opacity: 0.65;
+    transform: rotate(-6deg);
+    pointer-events: none;
+}
+.hero-right::after {
+    content: "";
+    position: absolute;
+    left: 9%;
+    bottom: 10%;
+    width: min(34%, 240px);
+    aspect-ratio: 1;
+    border: 2px solid var(--black);
+    box-shadow: 14px 14px 0 rgba(10,10,10,0.85);
+    opacity: 0.22;
+    pointer-events: none;
+}
+.breadcrumb {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    margin-bottom: 1.4rem;
+}
+.breadcrumb a { color: currentColor; text-decoration-color: rgba(255,255,255,0.36); }
+.meta-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    font-size: 13px;
+    font-weight: 700;
+    margin: 1.4rem 0;
+    align-items: center;
+}
+.quick-answer {
+    background: rgba(245,230,66,0.08);
+    border: 1px solid rgba(245,230,66,0.7);
+    border-left: 8px solid var(--yellow);
+    color: var(--body-dark);
+    padding: 20px;
+    margin: 1.8rem 0 0;
+    box-shadow: 8px 8px 0 var(--yellow);
+    max-width: 540px;
+    font-size: 13.6px;
+    line-height: 1.62;
+}
+.label-qa {
+    font-family: var(--font-heading);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: .02em;
+    color: var(--yellow);
+    display: block;
+    margin-bottom: 8px;
+}
+.hero-asset {
+    position: relative;
+    z-index: 2;
+    width: min(78%, 420px) !important;
+    max-height: min(70vh, 560px) !important;
+    height: auto !important;
+    object-fit: contain !important;
+    background: var(--black);
+    border: 4px solid var(--black);
+    box-shadow: 18px 18px 0 rgba(10,10,10,0.9);
+    transform: translateZ(0);
+}
+@media (max-width: 1100px) and (min-width: 861px) {
+    .hero-left, .hero-right {
+        padding-left: clamp(26px, 4.5vw, 54px);
+        padding-right: clamp(26px, 4.5vw, 54px);
+    }
+    .hero-left h1 {
+        font-size: clamp(38px, 4.6vw, 56px);
+    }
+    .quick-answer {
+        font-size: 12.8px;
+        padding: 18px;
+    }
+    .hero-asset {
+        width: min(82%, 360px) !important;
+    }
+}
+
+/* Structured sections */
+.content-section {
+    position: relative;
+    margin: 42px auto;
+    padding: clamp(28px, 4vw, 54px);
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--black);
+    box-shadow: 12px 12px 0 rgba(10,10,10,0.06);
+    overflow: hidden;
+    transition: background 350ms ease, color 350ms ease, border-color 350ms ease, transform 350ms ease;
+}
+.content-section::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 10px;
+    background: var(--yellow);
+}
+.content-section.theme-dark {
+    background: var(--dark);
+    color: var(--body-dark);
+    border-color: var(--line-dark);
+    box-shadow: 12px 12px 0 var(--yellow);
+}
+.content-section.theme-yellow {
+    background: var(--yellow);
+    color: var(--black);
+    border-color: var(--black);
+    box-shadow: 12px 12px 0 var(--black);
+}
+.content-section.shift-active {
+    transform: translateY(-2px);
+}
+.content-section.theme-dark a:hover { color: var(--yellow); }
+.content-section.theme-dark code {
+    background: rgba(245,230,66,0.14);
+    color: var(--yellow);
+    border-color: rgba(245,230,66,.45);
+}
+
+.toc-card {
+    background: var(--black);
+    color: var(--body-dark);
+    border: 1px solid var(--black);
+    padding: 30px;
+    margin: 46px 0;
+    box-shadow: 12px 12px 0 var(--yellow);
+}
+.toc-card h3 { color: var(--body-dark); margin-top: 0; }
+.toc-list { list-style: none; padding-left: 0; margin-bottom: 0; column-count: 2; column-gap: 2rem; }
+.toc-list li { break-inside: avoid; }
+.toc-list a {
+    color: rgba(245,245,240,0.84);
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(245,230,66,0.5);
+}
+.toc-list a:hover { color: var(--yellow); }
+
+/* Signature typographic contrast band */
+.contrast-band {
+    width: 100vw;
+    margin: 48px 0 18px calc(50% - 50vw);
+    display: flex;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--black);
+    border-bottom: 1px solid var(--black);
+}
+.contrast-band span {
+    flex: 1 1 260px;
+    min-height: 132px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 22px;
+    font-family: var(--font-heading);
+    font-size: clamp(40px, 8vw, 96px);
+    font-weight: 800;
+    text-transform: uppercase;
+    line-height: .86;
+    letter-spacing: -0.08em;
+}
+.contrast-band .ink { background: var(--black); color: var(--body-dark); }
+.contrast-band .acid { background: var(--yellow); color: var(--black); }
+
+/* Visual figures */
+.content-figure {
+    margin: 28px 0 34px;
+    background: var(--paper);
+    border: 2px solid currentColor;
+    padding: 10px;
+    box-shadow: 10px 10px 0 var(--yellow);
+}
+.theme-dark .content-figure {
+    box-shadow: 10px 10px 0 var(--yellow);
+    background: var(--black);
+    border-color: rgba(255,255,255,.24);
+}
+.theme-yellow .content-figure {
+    box-shadow: 10px 10px 0 var(--black);
+    background: #fff;
+}
+.content-figure img,
+.content-image,
+.mockup-body img,
+.comp-card img {
+    width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+}
+
+/* Method headers and bars */
+.method-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 18px;
+    border-bottom: 2px solid currentColor;
+    padding-bottom: 12px;
+    margin-top: 2.8rem;
+    margin-bottom: 1.4rem;
+}
+.method-header h3 { margin: 0; }
+.diff-viz {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+.bars { display: flex; gap: 4px; }
+.bar { width: 12px; height: 12px; background: rgba(10,10,10,.18); border: 1px solid currentColor; }
+.theme-dark .bar { background: rgba(255,255,255,.18); }
+.diff-1 .bar:nth-child(1),
+.diff-2 .bar:nth-child(1), .diff-2 .bar:nth-child(2),
+.diff-3 .bar:nth-child(1), .diff-3 .bar:nth-child(2), .diff-3 .bar:nth-child(3) {
+    background: var(--yellow);
+}
+
+/* Code */
+.code-block-wrapper { position: relative; margin: 1.5rem 0; }
+.code-block {
+    background: var(--black);
+    color: var(--body-dark);
+    padding: 24px;
+    border: 1px solid var(--yellow);
+    overflow-x: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 13px;
+    line-height: 1.55;
+}
+.copy-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--yellow);
+    color: var(--black);
+    border: 1px solid var(--yellow);
+    padding: 6px 10px;
+    font-size: 11px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+/* Widgets and cards */
+.widget-box {
+    border: 2px solid currentColor;
+    padding: 24px;
+    margin: 2rem 0;
+    background: rgba(245,230,66,.12);
+}
+.theme-dark .widget-box { background: rgba(245,230,66,.08); }
+.widget-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+select.os-select {
+    width: 100%;
+    padding: 12px;
+    font-family: var(--font-body);
+    border: 2px solid currentColor;
+    background: #fff;
+    color: var(--black);
+    margin-bottom: 10px;
+}
+.compat-result {
+    padding: 16px;
+    background: #fff;
+    color: var(--black);
+    border-left: 8px solid var(--yellow);
+    font-size: 14px;
+}
+
+.feature-grid, .comparison-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-top: 2rem;
+}
+.comp-card {
+    background: var(--black);
+    color: var(--body-dark);
+    border: 2px solid var(--black);
+    padding: 24px;
+    position: relative;
+    transition: filter 220ms ease, transform 220ms ease, background 220ms ease;
+}
+.comp-card h4 { color: inherit; }
+.comp-card.winner {
+    background: var(--yellow);
+    color: var(--black);
+    border-color: var(--black);
+    box-shadow: 10px 10px 0 var(--black);
+}
+.comp-card.winner::before {
+    content: 'TOP PICK';
+    position: absolute;
+    top: -14px;
+    left: 18px;
+    background: var(--black);
+    color: var(--yellow);
+    font-size: 11px;
+    padding: 4px 10px;
+    font-weight: 800;
+    font-family: var(--font-heading);
+    letter-spacing: .04em;
+}
+.comparison-cards:hover .comp-card:not(.winner), .grid-2:hover .comp-card:not(.winner) { filter: brightness(1.22); transform: translateY(-2px); }
+.comparison-cards:hover .comp-card.winner, .grid-2:hover .comp-card.winner { filter: brightness(.86); transform: translateY(-2px); }
+.check-list { list-style: none; padding: 0; }
+.check-list li { position: relative; padding-left: 24px; margin-bottom: 10px; font-size: 14px; }
+.check-list li::before { content: '→'; position: absolute; left: 0; color: var(--yellow); font-weight: 800; }
+.comp-card.winner .check-list li::before { color: var(--black); }
+
+/* SaaS recommendation moment */
+.saas-moment {
+    padding: 86px 0;
+    text-align: center;
+    background:
+        linear-gradient(90deg, var(--black) 0 50%, var(--yellow) 50% 100%);
+    color: var(--body-dark);
+    position: relative;
+    overflow: hidden;
+}
+.saas-moment::after {
+    content: "";
+    position: absolute;
+    inset: 0 50% 0 auto;
+    width: 1px;
+    background: #fff;
+}
+.saas-container { position: relative; z-index: 2; max-width: 940px; margin: 0 auto; padding: 0 20px; }
+.saas-moment h2 { color: var(--body-dark); }
+.saas-sub { font-size: 18px; color: var(--muted-dark); margin-bottom: 34px; }
+.mockup-container {
+    background: var(--black);
+    border: 2px solid #fff;
+    padding: 10px;
+    box-shadow: 18px 18px 0 rgba(245,230,66,.9);
+    margin: 36px auto 0;
+    max-width: 820px;
+    text-align: left;
+}
+.mockup-header { display: flex; gap: 6px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,.18); margin-bottom: 10px; }
+.mockup-dot { width: 10px; height: 10px; border-radius: 50%; background: #ddd; }
+.mockup-body { min-height: 280px; background: var(--paper); display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 0; }
+.product-boxshot {
+    max-width: 180px !important;
+    margin: 28px auto 0 !important;
+    filter: drop-shadow(14px 14px 0 rgba(10,10,10,.35));
+}
+.cta-group { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 28px; }
+
+/* FAQ */
+.faq-section {
+    background: var(--dark);
+    color: var(--body-dark);
+}
+.faq-container {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 2.4rem;
+    margin-top: 2rem;
+}
+.faq-sidebar { position: sticky; top: 100px; align-self: start; }
+.faq-cat-link {
+    display: block;
+    padding: 10px 0;
+    color: var(--muted-dark);
+    border-bottom: 1px solid var(--line-dark);
+    cursor: pointer;
+    text-decoration: none;
+}
+.faq-cat-link:hover, .faq-cat-link.active {
+    color: var(--yellow);
+    font-weight: 800;
+    border-color: var(--yellow);
+}
+.faq-item {
+    margin-bottom: 1rem;
+    border: 1px solid var(--line-dark);
+    border-left: 6px solid transparent;
+    padding: 18px;
+    background: rgba(255,255,255,.03);
+    transition: border-color 160ms ease, background 160ms ease;
+}
+.faq-item:hover, .faq-item.is-open {
+    border-left-color: var(--yellow);
+    background: rgba(245,230,66,.08);
+}
+.faq-q {
+    font-family: var(--font-heading);
+    font-size: 1.22rem;
+    color: var(--body-dark);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    font-weight: 800;
+}
+.faq-a { font-size: 14.5px; color: var(--muted-dark); }
+
+/* H2 split entrance */
+.split-heading { overflow: hidden; }
+.split-word {
+    display: inline-grid;
+    position: relative;
+    margin-right: .25em;
+    vertical-align: bottom;
+    line-height: .96;
+}
+.split-word .half {
+    grid-area: 1 / 1;
+    overflow: hidden;
+}
+.split-word .half span {
+    display: block;
+    transition: transform 680ms cubic-bezier(.18,.84,.24,1);
+}
+.split-word .left { clip-path: inset(0 50% 0 0); }
+.split-word .right { clip-path: inset(0 0 0 50%); }
+.split-ready .split-word .left span { transform: translateX(-110%); }
+.split-ready .split-word .right span { transform: translateX(110%); }
+.split-ready.split-active .split-word .left span,
+.split-ready.split-active .split-word .right span { transform: translateX(0); }
+
+/* Footer */
+footer {
+    background: var(--black) !important;
+    color: var(--muted-dark) !important;
+    padding: 60px 0 30px !important;
+    margin-top: 60px !important;
+    border-top: 1px solid var(--yellow);
+    font-size: 14px !important;
+}
+.footer-brand {
+    font-family: var(--font-heading);
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--body-dark);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-transform: uppercase;
+    letter-spacing: -0.035em;
+}
+footer a { color: var(--body-dark) !important; }
+footer a:hover { color: var(--yellow) !important; }
+
+/* Mobile */
+@media (max-width: 860px) {
+    .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: var(--black);
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 20px;
+        border-bottom: 1px solid var(--line-dark);
+    }
+    .nav-links.active { display: flex; }
+    .mobile-menu-btn { display: block; }
+    .hero {
+        min-height: auto;
+        background:
+            linear-gradient(180deg,
+                var(--black) 0 58%,
+                #ffffff 58% calc(58% + 1px),
+                var(--yellow) calc(58% + 1px) 100%);
+    }
+    .hero::after {
+        top: 58%;
+        left: 0;
+        right: 0;
+        bottom: auto;
+        width: 100%;
+        height: 1px;
+    }
+    .hero .container-reading {
+        min-height: auto;
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+    .hero-left, .hero-right { padding: 42px 22px; }
+    .hero-left h1 { font-size: clamp(38px, 12vw, 54px); line-height: .9; }
+    .hero-left > * { max-width: 100%; }
+    .quick-answer { max-width: 100%; font-size: 13px; box-shadow: 6px 6px 0 var(--yellow); }
+    .hero-right { min-height: 420px; padding-top: 56px; padding-bottom: 64px; }
+    .hero-right::before { width: 72%; inset: 10% 8% auto auto; }
+    .hero-right::after { width: 42%; }
+    .hero-asset { width: min(88%, 360px) !important; max-height: 360px !important; box-shadow: 10px 10px 0 rgba(10,10,10,0.88); }
+    .grid-2, .feature-grid, .comparison-cards, .faq-container { grid-template-columns: 1fr; }
+    .toc-list { column-count: 1; }
+    .content-section { padding: 30px 22px; }
+    .faq-sidebar { position: static; display: flex; overflow-x: auto; gap: 18px; white-space: nowrap; }
+    .faq-cat-link { border-bottom: 0; }
+    .cta-group { flex-direction: column; }
+    .split-ready .split-word .left span,
+    .split-ready .split-word .right span { transform: translateY(30%); opacity: 0; }
+    .split-ready.split-active .split-word .left span,
+    .split-ready.split-active .split-word .right span { transform: translateY(0); opacity: 1; }
+}
+</style>
+</head>
+<body>
+<header class="site-header">
+<div class="container-wide nav-inner">
+<a class="site-logo" href="/"><img alt="Security-themed folder lock graphic" class="brand-mark" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2096%2096%27%20role%3D%27img%27%20aria-label%3D%27security%20shield%20folder%20graphic%27%3E%0A%3Crect%20width%3D%2796%27%20height%3D%2796%27%20fill%3D%27%23F5E642%27/%3E%0A%3Cpath%20d%3D%27M18%2028h25l7%208h28v35c0%205-4%209-9%209H27c-5%200-9-4-9-9V28z%27%20fill%3D%27%230A0A0A%27/%3E%0A%3Cpath%20d%3D%27M34%2054v-7c0-8%206-14%2014-14s14%206%2014%2014v7h-7v-7c0-4-3-7-7-7s-7%203-7%207v7h-7z%27%20fill%3D%27%23F5E642%27/%3E%0A%3Crect%20x%3D%2729%27%20y%3D%2751%27%20width%3D%2738%27%20height%3D%2726%27%20rx%3D%274%27%20fill%3D%27%23F5E642%27/%3E%0A%3Ccircle%20cx%3D%2748%27%20cy%3D%2763%27%20r%3D%274%27%20fill%3D%27%230A0A0A%27/%3E%0A%3Cpath%20d%3D%27M48%2066v6%27%20stroke%3D%27%230A0A0A%27%20stroke-width%3D%274%27%20stroke-linecap%3D%27round%27/%3E%0A%3C/svg%3E"/><span>Win File Protect</span></a>
+<button aria-label="Toggle Menu" class="mobile-menu-btn">☰</button>
+<nav class="nav-links">
+<a href="#overview">Overview</a>
+<a href="#native-methods">Built-in Methods</a>
+<a href="#software-methods">Software Solutions</a>
+<a href="#troubleshooting">Troubleshooting</a>
+<a href="#faq">FAQ</a>
+<a class="btn btn-outline" href="#recommendation" style="padding: 6px 14px;">Our Top Pick →</a>
+</nav>
+</div>
+</header>
+<!-- S1: HERO -->
+<section class="hero">
+<div class="container-reading"><div class="hero-left">
+<div class="breadcrumb">
+<a href="/">Home</a> / <a href="/windows-10-security/">Windows 10 Security</a> / How to Lock a File
+            </div>
+<h1>How to Lock a File in Windows 10 — All Methods Explained</h1>
+<p>From built-in NTFS permissions and EFS encryption to dedicated third-party vaults, discover the safest ways to password-protect your sensitive files locally or on a shared network.</p>
+<div class="meta-bar">
+<span><svg fill="none" height="14" stroke="currentColor" stroke-width="2" style="vertical-align: -2px; margin-right:4px;" viewbox="0 0 24 24" width="14"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> Editorial Team</span>
+<span><svg fill="none" height="14" stroke="currentColor" stroke-width="2" style="vertical-align: -2px; margin-right:4px;" viewbox="0 0 24 24" width="14"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg> Updated Last Month</span>
+<span><svg fill="none" height="14" stroke="currentColor" stroke-width="2" style="vertical-align: -2px; margin-right:4px;" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> 12 min read</span>
+</div>
+<div class="quick-answer">
+<span class="label-qa">What people search for (TL;DR)</span>
+                To truly <strong>lock a file in Windows 10 with a password</strong>, the OS built-in Encrypting File System (EFS) ties protection to your Windows user account—preventing other accounts from opening it. However, if you need a distinct password prompt every time you click a file or folder, Windows 10 cannot do this natively. You must use dedicated folder lock software (like <a href="https://newsoftwares.net/" rel="noopener noreferrer" target="_blank">Folder Lock</a>) or compress the file into a <a href="https://kongotech.org/how-to-password-protect-a-zip-file/" rel="noopener noreferrer" target="_blank">password-protected ZIP archive</a>.
+            </div>
+</div><div class="hero-right"><img alt="Folder Lock 10 Security and Protection Promotional Banner" class="hero-asset" src="https://i.ibb.co/C3dwdr7Z/folder-lock-10-promotional-poster-newsoftwares.jpg"/></div></div>
+</section>
+<div class="container-reading"><!-- S2: TOC -->
+<div class="toc-card">
+<h3>Guide Contents</h3>
+<ul class="toc-list">
+<li><a href="#requirements">What You Need Before Starting</a></li>
+<li><a href="#scope">File vs Folder vs Drive Locks</a></li>
+<li><a href="#native-methods">Method 1: Windows 10 Built-in Tools</a></li>
+<li><a href="#software-methods">Method 2: Dedicated Lock Software</a></li>
+<li><a href="#recommendation">Our Recommended Solution</a></li>
+<li><a href="#troubleshooting">Troubleshooting &amp; Verification</a></li>
+<li><a href="#eol-warning">Windows 10 EOL Implications</a></li>
+<li><a href="#faq">Frequently Asked Questions</a></li>
+</ul>
+</div>
+<!-- Requirements & Compatibility (Interactive) -->
+<section class="content-section section-chunk theme-light"><h2 id="requirements">Requirements &amp; Compatibility Check</h2>
+<p>Before attempting to lock a file in Windows, you must verify your specific edition. Features like <a href="https://proprivacy.com/guides/encrypt-files-windows" rel="noopener noreferrer" target="_blank">EFS and BitLocker</a> are artificially restricted by Microsoft based on your license tier.</p>
+<div class="widget-box">
+<div class="widget-title">
+<svg fill="none" height="20" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="20"><rect height="14" rx="2" ry="2" width="20" x="2" y="3"></rect><line x1="8" x2="16" y1="21" y2="21"></line><line x1="12" x2="12" y1="17" y2="21"></line></svg>
+                Windows 10 Capability Checker
+            </div>
+<label for="win-edition" style="display:block; margin-bottom:5px; font-size:13px; font-weight:bold;">Select your Windows 10 Edition:</label>
+<select class="os-select" id="win-edition">
+<option value="none">-- Choose Edition --</option>
+<option value="home">Windows 10 Home</option>
+<option value="pro">Windows 10 Pro / Enterprise</option>
+<option value="shared">I share this PC with others (Single Account)</option>
+</select>
+<div class="compat-result" id="compat-output" style="display:none;"></div>
+</div><figure class="content-figure"><img alt="Windows compatibility dashboard for checking file locking and encryption support" loading="lazy" src="https://i.ibb.co/xqX6k3tR/Universal-Windows-Compatibility.jpg"/></figure>
+<!-- Scope -->
+</section><section class="content-section section-chunk theme-yellow"><h2 id="scope">Understanding the Scope of File Security</h2>
+<p>A common mistake when searching for <em>how to lock a file on my computer</em> is confusing different layers of security. In Windows 10, protection operates at three distinct levels:</p>
+<ul>
+<li><strong>File-Level Locks (NTFS Permissions):</strong> Prevents unauthorized Windows user accounts from modifying or deleting specific files. It does <em>not</em> prompt for a password; access is silently granted or denied based on the logged-in user.</li>
+<li><strong>Folder Locking (Software):</strong> Utilizes a third-party kernel driver to instantly hide, lock, and require a master password whenever someone attempts to open the directory. This is the traditional "lock box" experience most users expect.</li>
+<li><strong>Drive Encryption (BitLocker):</strong> Secures the entire physical drive. Useful for stolen laptops, but useless if the PC is currently powered on and unlocked.</li>
+</ul><figure class="content-figure"><img alt="Digital data protection vault representing file and folder security layers" loading="lazy" src="https://i.ibb.co/bMzYGK6K/Data-Protection-Vault.jpg"/></figure><div aria-hidden="true" class="contrast-band"><span class="ink">LOCK A FILE</span><span class="acid">WINDOWS 10</span><span class="ink">WITH PASSWORD</span></div>
+<!-- Native Methods -->
+</section><section class="content-section section-chunk theme-dark"><h2 id="native-methods">Method 1: Native Windows 10 Tools (No Software)</h2>
+<p>If you don't want to install third-party apps, you can use <a href="https://www.avast.com/c-password-protect-file-folder-windows" rel="noopener noreferrer" target="_blank">built-in Windows features</a>. Be aware that these methods are often cumbersome and lack a dedicated password prompt mechanism.</p><figure class="content-figure"><img alt="Windows security tools interface for built-in file protection features" loading="lazy" src="https://i.ibb.co/84gBFQ3x/windows-security-tools-microsoft-defender-and-built-in-features.jpg"/></figure>
+<div class="method-header">
+<h3>A. Encrypting File System (EFS)</h3>
+<div class="diff-viz diff-2">
+<span>Difficulty:</span>
+<div class="bars"><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>
+</div>
+</div>
+<p>EFS encrypts your file using an encryption certificate tied to your Windows user account. If another user logs into the same PC, the file will appear green (or display a lock icon) and deny them access.</p>
+<ol>
+<li>Right-click the file you wish to secure and select <strong>Properties</strong>.</li>
+<li>In the General tab, click the <strong>Advanced</strong> button.</li>
+<li>Check the box labeled <strong>Encrypt contents to secure data</strong>.</li>
+<li>Click <strong>OK</strong>, then <strong>Apply</strong>.</li>
+<li>Windows will ask if you want to encrypt the file only, or the parent folder as well. Choose your preference.</li>
+</ol><figure class="content-figure"><img alt="Encryption explainer illustration for securing Windows files with EFS" loading="lazy" src="https://i.ibb.co/gZ8Tcbqc/what-is-encryption-complete-explainer-for-beginners.jpg"/></figure>
+<p><em>Limitation:</em> If you share a single Windows login account with your family, EFS is completely ineffective. The file will open normally for anyone using your account.</p>
+<div class="method-header">
+<h3>B. Folder Lock via CMD Batch Script (Basic Hiding)</h3>
+<div class="diff-viz diff-3">
+<span>Difficulty:</span>
+<div class="bars"><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>
+</div>
+</div>
+<p>You can create a simple batch script that hides a folder and requires a text password to unhide it. This is a neat trick, but <strong>it is not true encryption</strong>. Anyone who right-clicks the `.bat` file and selects "Edit" can read your password in plain text.</p><figure class="content-figure"><img alt="Computer keyboard used for creating a Windows folder lock batch script" loading="lazy" src="https://i.ibb.co/vpWzKVd/computer-keyboard.jpg"/></figure>
+<p>Copy the following code into Notepad, replace <code>YOUR-PASSWORD-HERE</code> with your desired password, and save the file as <code>Locker.bat</code> (ensure "All Files" is selected in the Save dialog).</p>
+<div class="code-block-wrapper">
+<button class="copy-btn" onclick="copyCode(this)">Copy</button>
+<pre class="code-block" id="cmd-script">cls
+@ECHO OFF
+title Folder Locker
+if EXIST "Control Panel.{21EC2020-3AEA-1069-A2DD-08002B30309D}" goto UNLOCK
+if NOT EXIST Private goto MDLOCKER
+:CONFIRM
+echo Are you sure you want to lock the folder? (Y/N)
+set/p "cho=&gt;"
+if %cho%==Y goto LOCK
+if %cho%==y goto LOCK
+if %cho%==n goto END
+if %cho%==N goto END
+echo Invalid choice.
+goto CONFIRM
+:LOCK
+ren Private "Control Panel.{21EC2020-3AEA-1069-A2DD-08002B30309D}"
+attrib +h +s "Control Panel.{21EC2020-3AEA-1069-A2DD-08002B30309D}"
+echo Folder locked
+goto End
+:UNLOCK
+echo Enter password to unlock folder
+set/p "pass=&gt;"
+if NOT %pass%==YOUR-PASSWORD-HERE goto FAIL
+attrib -h -s "Control Panel.{21EC2020-3AEA-1069-A2DD-08002B30309D}"
+ren "Control Panel.{21EC2020-3AEA-1069-A2DD-08002B30309D}" Private
+echo Folder Unlocked successfully
+goto End
+:FAIL
+echo Invalid password
+goto end
+:MDLOCKER
+md Private
+echo Private created successfully
+goto End
+:End</pre>
+</div>
+<div class="method-header">
+<h3>C. Deny NTFS Permissions (Prevent Editing/Deletion)</h3>
+<div class="diff-viz diff-2">
+<span>Difficulty:</span>
+<div class="bars"><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>
+</div>
+</div>
+<p>If you specifically searched for <em>how to lock a file from being deleted</em> or <em>lock a file from being edited</em>, NTFS permissions are the correct built-in tool.</p>
+<ol>
+<li>Right-click the file and select <strong>Properties &gt; Security</strong> tab.</li>
+<li>Click <strong>Edit...</strong> to change permissions.</li>
+<li>Select the User or Group you want to restrict (e.g., "Everyone" or "Guest").</li>
+<li>Under the "Deny" column, check boxes for <strong>Modify</strong>, <strong>Write</strong>, and <strong>Delete</strong> (you may need Advanced settings for granular delete permissions).</li>
+<li>Click <strong>Apply</strong>.</li>
+</ol><figure class="content-figure"><img alt="Blocked access illustration for Windows NTFS permission restrictions" loading="lazy" src="https://i.ibb.co/67JVy6mQ/blocked-access-user-illustration.png"/></figure>
+<!-- Software Methods -->
+</section><section class="content-section section-chunk theme-light"><h2 id="software-methods">Method 2: Dedicated File Lock Software</h2>
+<p>Because Windows 10 lacks a native right-click "Password Protect" option, <a href="https://maketecheasier.com/password-lock-folder-windows/" rel="noopener noreferrer" target="_blank">third-party software</a> is the only way to get a true, on-demand lock prompt. This is vital if you share a PC and cannot rely on separate user accounts.</p><figure class="content-figure"><img alt="Folder Lock 10 main screen showing secure locker management on Windows" loading="lazy" src="https://i.ibb.co/ynCZTHt1/folder-lock-10-main-screen.png"/></figure>
+<div class="method-header">
+<h3>A. Full AES-256 Encryption &amp; Portable Vaults</h3>
+<div class="diff-viz diff-1">
+<span>Difficulty:</span>
+<div class="bars"><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>
+</div>
+</div>
+<p>Instead of just hiding a directory, premium tools scramble the binary data of your files using <a href="https://psbios.com/file-encryption-explained/" rel="noopener noreferrer" target="_blank">military-grade cryptographic standards</a>. This guarantees that even if a thief physically removes your hard drive and bypasses the Windows 10 operating system entirely, the data remains unreadable.</p>
+<img alt="Folder Lock AES-256 encrypted locker dashboard in Windows 10" loading="lazy" src="https://i.ibb.co/Q713yG79/Folder-Lock-locker.jpg"/>
+<p>Furthermore, modern security tools allow you to construct self-contained, executable vaults directly onto external flash drives. This means you can secure your data on your Windows 10 desktop, carry the USB stick to a different computer, and authenticate your password without needing to reinstall the software on the guest machine.</p><figure class="content-figure"><img alt="Secure virtual drive concept for portable encrypted file vaults" loading="lazy" src="https://i.ibb.co/q3LHT6Kb/Secure-Virtual-Drive.jpg"/></figure>
+<div class="method-header">
+<h3>B. Granular Rule-Based Restrictions &amp; File Masking</h3>
+<div class="diff-viz diff-2">
+<span>Difficulty:</span>
+<div class="bars"><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>
+</div>
+</div>
+<p>Sometimes you do not need heavy encryption; you simply need to enforce strict boundaries. Advanced third-party utilities exist that allow you to dictate exact permissions. For example, you can set a policy that permits a coworker to view a spreadsheet but completely blocks them from altering or deleting it.</p>
+<img alt="Folder Protect interface showing granular rule-based file and extension restrictions" loading="lazy" src="https://i.ibb.co/RTVcfd3m/folder-protect-for-windows.jpg"/>
+<p>Additionally, specialized tools offer "mask" protection. Instead of targeting a single folder, you can instruct the software to lock every single image format or application executable across your entire hard drive simultaneously.</p>
+<div class="method-header">
+<h3>C. Post-Lock Data Sanitization &amp; Stealth</h3>
+<div class="diff-viz diff-1">
+<span>Difficulty:</span>
+<div class="bars"><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>
+</div>
+</div>
+<p>A critical flaw in manual hiding methods is that Windows 10 retains a memory of recently opened documents. Dedicated software actively combats this by wiping your system's recent file history and permanently shredding the original, unprotected source files once they are moved into the secure vault. This prevents forensic recovery of the leftover unsecured copy.</p><figure class="content-figure"><img alt="Stealth mode operation concept for wiping traces after files are locked" loading="lazy" src="https://i.ibb.co/Dfynt3Vg/Stealth-Mode-Operation.jpg"/></figure>
+<div class="comparison-cards">
+<div class="comp-card">
+<h4>Built-in Windows 10 Tools</h4>
+<ul class="check-list">
+<li>Free (already installed)</li>
+<li>No actual password prompt on files</li>
+<li>Requires Win 10 Pro for EFS</li>
+<li>Fails if PC is shared on one account</li>
+<li>Can be complex to configure securely</li>
+</ul>
+</div>
+<div class="comp-card winner">
+<h4>Folder Lock Software</h4>
+<ul class="check-list">
+<li>Instant locking mechanism</li>
+<li>True password prompts per folder</li>
+<li>Military-grade 256-bit AES encryption</li>
+<li>Works across Windows editions</li>
+<li>Includes file shredding and history cleaning</li>
+</ul>
+</div>
+</div><figure class="content-figure"><img alt="Military-grade file shield illustration comparing built-in tools with dedicated lock software" loading="lazy" src="https://i.ibb.co/C5sfWRJm/Military-Grade-File-Shield.jpg"/></figure>
+</section></div>
+<section class="saas-moment mt-4" id="recommendation">
+<div class="saas-container">
+<h2>The Tool We Recommend for Most Users</h2>
+<p class="saas-sub">Of all the methods we tested, <strong>Folder Lock</strong> provides the most resilient defense. It seamlessly blends rapid folder hiding with unbreakable cryptographic vaults, while offering synchronization across your desktop and mobile ecosystems.</p>
+<div class="mockup-container">
+<div class="mockup-header"><div class="mockup-dot" style="background:#ff5f56;"></div><div class="mockup-dot" style="background:#ffbd2e;"></div><div class="mockup-dot" style="background:#27c93f;"></div></div>
+<div class="mockup-body">
+<img alt="Proactive Data Security Dashboard in Folder Lock 10" loading="lazy" src="https://i.ibb.co/V00KXtpW/folder-lock-10-social-media-ad-proactive-data-security.jpg"/>
+</div>
+</div><img alt="Folder Lock 10 Pro product boxshot for Windows file security" class="product-boxshot" loading="lazy" src="https://i.ibb.co/Psv235rk/folder-lock-10-pro-boxshot-160x220.png"/>
+<div class="cta-group">
+<a class="btn btn-fill" href="https://www.newsoftwares.net/download/folderlock10-en/folderlock10-en.exe" rel="noopener noreferrer" target="_blank">Try Folder Lock Free →</a>
+<a class="btn btn-outline" href="https://store.newsoftwares.net/?add=fl10" rel="noopener noreferrer" target="_blank">Get the Full Version →</a>
+</div>
+<p style="margin-top:20px; font-size:13px; color:#a3b8c7;">Free trials typically cap secure storage at 1GB. Upgrading to a premium license unlocks unlimited vault capacity and multi-device cloud syncing.</p>
+</div>
+</section>
+<div class="container-reading">
+<!-- Troubleshooting -->
+<section class="content-section section-chunk theme-light"><h2 id="troubleshooting">Troubleshooting &amp; Verification</h2>
+<p>Security is only effective if applied correctly. Use these steps to verify your locked file is actually protected.</p>
+<div class="widget-box">
+<div class="widget-title">Post-Lock Verification Audit</div>
+<form id="audit-form">
+<label style="display:block; margin-bottom:10px;"><input onchange="updateAudit()" type="checkbox"/> Log out of your Windows account and log in as a standard user or guest.</label>
+<label style="display:block; margin-bottom:10px;"><input onchange="updateAudit()" type="checkbox"/> Attempt to open the locked file directly from File Explorer.</label>
+<label style="display:block; margin-bottom:10px;"><input onchange="updateAudit()" type="checkbox"/> Verify that recent file history does not expose the path.</label>
+<label style="display:block; margin-bottom:10px;"><input onchange="updateAudit()" type="checkbox"/> Copy the file to a USB drive and test if protection travels with it.</label>
+</form>
+<div class="compat-result" id="audit-result" style="display:none; margin-top:15px; border-left-color: #28a745;">
+                    Audit complete: If all tests passed, your file lock is functioning as expected.
+                </div>
+</div><figure class="content-figure"><img alt="Monitoring access attempts after verifying locked Windows files" loading="lazy" src="https://i.ibb.co/DPBbtBCG/Monitoring-Attempts.jpg"/></figure>
+<h3>Owner-Safe Recovery: Forgot Password</h3>
+<p>If you used <strong>EFS</strong>, and you reinstall Windows or lose access to your user account profile, your files may become permanently inaccessible unless you backed up the EFS certificate. Always export the certificate using the <code>certmgr.msc</code> tool.</p>
+<p>If you used <strong>Folder Lock</strong>, locate your original master password, or check the settings for your registered recovery email if enabled. Legitimate security software <em>does not</em> include backdoor bypass tools—if it did, it wouldn't be secure.</p><figure class="content-figure"><img alt="Password lock graphic for owner-safe folder lock recovery planning" loading="lazy" src="https://i.ibb.co/LzzGGSL3/Password-Lock.jpg"/></figure>
+<!-- EOL Callout -->
+</section><section class="content-section section-chunk theme-yellow"><h2 id="eol-warning">Windows 10 End-of-Life Security Implications</h2>
+<p>Microsoft officially ends support for Windows 10 on <strong>October 14, 2025</strong>. After this date, the OS will no longer receive security patches.</p>
+<div class="bg-tint" style="padding: 30px; border-radius: var(--radius-card); margin: 2rem 0; border: 1px solid var(--color-border);">
+<div class="font-heading" id="countdown-timer" style="font-size: 1.5rem; margin-bottom: 10px; color: var(--color-primary-accent);">Calculating EOL...</div>
+<p style="margin-bottom:0;">Running an unsupported OS means any zero-day exploit could bypass built-in OS-level protections. If you plan to keep using Windows 10 after EOL, robust third-party encryption becomes significantly more important for sensitive files.</p>
+</div><figure class="content-figure"><img alt="Laptop security upgrade concept for Windows 10 end of life protection" loading="lazy" src="https://i.ibb.co/xSxRH5tb/laptop-new-device-security.jpg"/></figure>
+<!-- S20: FAQ -->
+</section><section class="content-section section-chunk theme-dark faq-section"><h2 id="faq">Frequently Asked Questions</h2>
+<figure class="content-figure"><img alt="Security shield protecting frequently asked file lock questions" loading="lazy" src="https://i.ibb.co/bjywWFhL/security-shield-protecting.jpg"/></figure><div class="faq-container">
+<div class="faq-sidebar">
+<a class="faq-cat-link active" onclick="filterFaq('general')">General File Locks</a>
+<a class="faq-cat-link" onclick="filterFaq('permissions')">Permissions &amp; Edits</a>
+<a class="faq-cat-link" onclick="filterFaq('software')">Software &amp; Tools</a>
+</div>
+<div class="faq-content">
+<div class="faq-item" data-cat="general">
+<div class="faq-q">How do I lock a file in Windows 10?</div>
+<div class="faq-a">You can use the built-in Encrypting File System (EFS) if you have Windows 10 Pro, use third-party folder lock software, or place the file inside a password-protected ZIP archive.</div>
+</div>
+<div class="faq-item" data-cat="permissions">
+<div class="faq-q">How to lock a file so it cannot be deleted in Windows 10?</div>
+<div class="faq-a">Right-click the file &gt; Properties &gt; Security. Edit permissions for the target user and explicitly deny the "Delete" and "Modify" permissions.</div>
+</div>
+<div class="faq-item" data-cat="permissions">
+<div class="faq-q">Can I lock a file from being edited in Windows 10?</div>
+<div class="faq-a">Yes. In the Security properties, you can deny the "Write" permission while allowing "Read". This makes the file read-only for that specific user.</div>
+</div>
+<div class="faq-item" data-cat="software">
+<div class="faq-q">What is the difference between locking and encrypting a file in Windows 10?</div>
+<div class="faq-a">Locking a file usually refers to denying access or requiring a password to open it via the OS interface. Encrypting (like BitLocker or EFS) scrambles the actual binary data of the file so it cannot be read even if the storage drive is removed and plugged into another computer.</div>
+</div>
+<div class="faq-item" data-cat="general">
+<div class="faq-q">How do I check which files are locked in Windows 10?</div>
+<div class="faq-a">For system file locks (e.g., "File in Use"), you can use Resource Monitor &gt; CPU tab &gt; Associated Handles, and search for the file name. For encrypted files, you can open CMD and use the `cipher /s:C:\` command to list EFS protected files.</div>
+</div>
+<div class="faq-item" data-cat="software">
+<div class="faq-q">Is Folder Lock software compatible with Windows 11?</div>
+<div class="faq-a">Yes, modern versions of Folder Lock are fully compatible with both Windows 10 and Windows 11, across all editions (Home, Pro, and Enterprise).</div>
+</div>
+<div class="faq-item" data-cat="software">
+<div class="faq-q">Can I take my locked files to another computer?</div>
+<div class="faq-a">Yes. Advanced tools allow you to convert your secure directories into portable executable vaults. You can save these to a thumb drive and access your data on any other Windows machine by simply entering your master password, without requiring an administrative installation on the host PC.</div>
+</div>
+<div class="faq-item" data-cat="software">
+<div class="faq-q">Are there storage limits on free file locking tools?</div>
+<div class="faq-a">Typically, yes. While some basic hiding scripts are free, robust encryption tools usually restrict trial users to a specific data cap (such as one gigabyte) or limit the number of vaults until you purchase a license.</div>
+</div>
+</div>
+</div>
+<!-- S19: Related Products -->
+</section><section class="content-section section-chunk theme-light"><h2>Other Security Tools You Might Find Useful</h2>
+<p>These tools are developed by <a href="https://www.newsoftwares.net" rel="noopener noreferrer" target="_blank">NewSoftwares.net</a>, the same security team behind Folder Lock.</p>
+<div class="grid-2" style="margin-top: 2rem;">
+<div class="comp-card" style="box-shadow:none;">
+<img alt="USB Secure portable password protection interface" loading="lazy" src="https://i.ibb.co/1Y7Z4tmV/usb-secure-screen-1.png"/>
+<h4 style="margin-bottom:5px;">USB Secure</h4>
+<p style="font-size:13.5px;">Portable password protection for USB flash drives and external hard drives. Runs directly from the drive without requiring installation on the host PC.</p>
+</div>
+<div class="comp-card" style="box-shadow:none;">
+<img alt="Cloud Secure product boxshot for protecting cloud sync folders" loading="lazy" src="https://i.ibb.co/PBv0CDc/cloud-secure-boxshot.png"/><h4 style="margin-bottom:5px;">Cloud Secure</h4>
+<p style="font-size:13.5px;">Locks your local Dropbox, Google Drive, and OneDrive sync folders to prevent unauthorized access on your physical machine.</p>
+</div>
+</div>
+</section></div>
+<footer style="background: var(--black); color: #8b99a6; padding: 60px 0 30px; margin-top: 60px; font-size: 14px;">
+<div class="container-reading">
+<div class="footer-brand"><img alt="Security-themed folder lock graphic" class="brand-mark" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2096%2096%27%20role%3D%27img%27%20aria-label%3D%27security%20shield%20folder%20graphic%27%3E%0A%3Crect%20width%3D%2796%27%20height%3D%2796%27%20fill%3D%27%23F5E642%27/%3E%0A%3Cpath%20d%3D%27M18%2028h25l7%208h28v35c0%205-4%209-9%209H27c-5%200-9-4-9-9V28z%27%20fill%3D%27%230A0A0A%27/%3E%0A%3Cpath%20d%3D%27M34%2054v-7c0-8%206-14%2014-14s14%206%2014%2014v7h-7v-7c0-4-3-7-7-7s-7%203-7%207v7h-7z%27%20fill%3D%27%23F5E642%27/%3E%0A%3Crect%20x%3D%2729%27%20y%3D%2751%27%20width%3D%2738%27%20height%3D%2726%27%20rx%3D%274%27%20fill%3D%27%23F5E642%27/%3E%0A%3Ccircle%20cx%3D%2748%27%20cy%3D%2763%27%20r%3D%274%27%20fill%3D%27%230A0A0A%27/%3E%0A%3Cpath%20d%3D%27M48%2066v6%27%20stroke%3D%27%230A0A0A%27%20stroke-width%3D%274%27%20stroke-linecap%3D%27round%27/%3E%0A%3C/svg%3E"/><span>WIN FILE PROTECT</span></div>
+<p style="margin-bottom: 30px;">This site operates as an independent editorial resource. Some links may earn a referral commission at no cost to you. Product recommendations reflect editorial judgment and independent assessment. Folder Lock is developed by <a href="https://www.newsoftwares.net" rel="noopener noreferrer" style="color:#fff;" target="_blank">NewSoftwares.net</a>.</p>
+<div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; display: flex; justify-content: space-between;">
+<span>© 2026 Win File Protect</span>
+<span style="display: flex; gap: 15px;">
+<a href="#" style="color:#8b99a6;">Privacy Policy</a>
+<a href="#" style="color:#8b99a6;">Terms of Use</a>
+</span>
+</div>
+</div>
+</footer>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+        // Hero Split Shift
+        const hero = document.querySelector('.hero');
+        if (hero && window.matchMedia('(min-width: 861px)').matches) {
+            hero.addEventListener('mousemove', (e) => {
+                const rect = hero.getBoundingClientRect();
+                const x = ((e.clientX - rect.left) / rect.width) * 100;
+                const eased = 50 + ((x - 50) * 0.3);
+                const clamped = Math.max(42, Math.min(58, eased));
+                hero.style.setProperty('--split', `${clamped}%`);
+            });
+            hero.addEventListener('mouseleave', () => hero.style.setProperty('--split', '50%'));
+        }
+
+        // Word Split Entrance for H2 headings
+        const splitHeadings = document.querySelectorAll('h2');
+        splitHeadings.forEach((heading) => {
+            if (heading.dataset.splitReady) return;
+            const text = heading.textContent.trim();
+            if (!text) return;
+            heading.dataset.splitReady = 'true';
+            heading.setAttribute('aria-label', text);
+            heading.classList.add('split-heading', 'split-ready');
+            heading.innerHTML = '';
+            text.split(/\s+/).forEach((word, index) => {
+                const shell = document.createElement('span');
+                shell.className = 'split-word';
+                shell.setAttribute('aria-hidden', 'true');
+
+                const left = document.createElement('span');
+                left.className = 'half left';
+                const leftInner = document.createElement('span');
+                leftInner.textContent = word;
+                left.appendChild(leftInner);
+
+                const right = document.createElement('span');
+                right.className = 'half right';
+                const rightInner = document.createElement('span');
+                rightInner.textContent = word;
+                right.appendChild(rightInner);
+
+                shell.appendChild(left);
+                shell.appendChild(right);
+                heading.appendChild(shell);
+                if (index < text.split(/\s+/).length - 1) heading.appendChild(document.createTextNode(' '));
+            });
+        });
+
+        // Scroll Color Shift + word entrance trigger
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('shift-active');
+                    entry.target.querySelectorAll('h2').forEach(h => h.classList.add('split-active'));
+                }
+            });
+        }, { threshold: 0.22 });
+
+        document.querySelectorAll('.content-section, .saas-moment').forEach(section => observer.observe(section));
+
+        // FAQ open-state visual cue
+        document.querySelectorAll('.faq-item').forEach((item, idx) => {
+            if (idx === 0) item.classList.add('is-open');
+            item.addEventListener('mouseenter', () => item.classList.add('is-open'));
+            item.addEventListener('mouseleave', () => item.classList.remove('is-open'));
+        });
+
+            // Mobile Menu
+            const menuBtn = document.querySelector('.mobile-menu-btn');
+            const navLinks = document.querySelector('.nav-links');
+            if (menuBtn && navLinks) {
+                menuBtn.addEventListener('click', () => {
+                    navLinks.classList.toggle('active');
+                });
+            }
+
+            // Smooth Scroll
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetEl = document.querySelector(this.getAttribute('href'));
+                    if (targetEl) {
+                        targetEl.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                    if(window.innerWidth <= 768 && navLinks) navLinks.classList.remove('active');
+                });
+            });
+
+            // Compatibility Checker
+            const winSelect = document.getElementById('win-edition');
+            const compatOut = document.getElementById('compat-output');
+            if(winSelect && compatOut) {
+                winSelect.addEventListener('change', (e) => {
+                    const val = e.target.value;
+                    compatOut.style.display = 'block';
+                    if(val === 'home') {
+                        compatOut.innerHTML = '<strong>Windows 10 Home detected:</strong> Native EFS encryption is <span style="color:#d9534f;">disabled</span> in your OS edition. You must use third-party Folder Lock software or basic ZIP passwords.';
+                        compatOut.style.borderLeftColor = '#d9534f';
+                    } else if (val === 'pro') {
+                        compatOut.innerHTML = '<strong>Windows 10 Pro detected:</strong> You have full access to native EFS encryption and BitLocker, though dedicated software remains easier for folder-level password prompts.';
+                        compatOut.style.borderLeftColor = 'var(--yellow)';
+                    } else if (val === 'shared') {
+                        compatOut.innerHTML = '<strong>Shared PC detected:</strong> Native Windows locks (NTFS/EFS) are ineffective if everyone uses the same login account. You <em>must</em> use dedicated lock software to enforce a password prompt.';
+                        compatOut.style.borderLeftColor = 'var(--yellow)';
+                    } else {
+                        compatOut.style.display = 'none';
+                    }
+                });
+            }
+
+            // EOL Countdown
+            const countdownEl = document.getElementById('countdown-timer');
+            if(countdownEl) {
+                const targetDate = new Date("October 14, 2025").getTime();
+                const now = new Date().getTime();
+                const distance = targetDate - now;
+                if(distance > 0) {
+                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    countdownEl.innerText = `${days} Days Until Windows 10 End-of-Life`;
+                } else {
+                    countdownEl.innerText = `Windows 10 is past End-of-Life. Upgrade immediately.`;
+                }
+            }
+        });
+
+        // Copy Code Function
+        window.copyCode = function(btn) {
+            const pre = btn.nextElementSibling;
+            // Provide fallback as execCommand is more stable in sandboxed iframes
+            try {
+                const range = document.createRange();
+                range.selectNodeContents(pre);
+                const selection = window.getSelection();
+                selection.removeAllRanges();
+                selection.addRange(range);
+                document.execCommand('copy');
+                selection.removeAllRanges();
+                
+                btn.innerText = 'Copied!';
+                btn.style.background = 'var(--yellow)';
+                setTimeout(() => {
+                    btn.innerText = 'Copy';
+                    btn.style.background = 'rgba(255,255,255,0.1)';
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy text', err);
+            }
+        };
+
+        // Audit Form Logic
+        window.updateAudit = function() {
+            const checks = document.querySelectorAll('#audit-form input[type="checkbox"]');
+            const allChecked = Array.from(checks).every(c => c.checked);
+            const result = document.getElementById('audit-result');
+            if(allChecked) {
+                result.style.display = 'block';
+            } else {
+                result.style.display = 'none';
+            }
+        };
+
+        // FAQ Filter (Simple client-side tab system)
+        window.filterFaq = function(cat) {
+            document.querySelectorAll('.faq-cat-link').forEach(link => link.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.querySelectorAll('.faq-item').forEach(item => {
+                if(item.dataset.cat === cat || cat === 'all') {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        };
+    </script>
+<!-- Schema -->
+<script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "How to Lock a File in Windows 10 — All Methods Explained",
+      "description": "The complete technical guide to locking a file in Windows 10. Compare built-in NTFS permissions, EFS, and third-party software methods.",
+      "author": {
+        "@type": "Organization",
+        "name": "WinFileProtect Editorial Team"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "NewSoftwares.net"
+      }
+    }
+    </script>
+<script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How do I lock a file in Windows 10?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You can use the built-in Encrypting File System (EFS) if you have Windows 10 Pro, use third-party folder lock software, or place the file inside a password-protected ZIP archive."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How to lock a file so it cannot be deleted in Windows 10?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Right-click the file > Properties > Security. Edit permissions for the target user and explicitly deny the 'Delete' and 'Modify' permissions."
+          }
+        }
+      ]
+    }
+    </script>
+<script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Windows 10 Security"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "How to Lock a File"
+        }
+      ]
+    }
+    </script>
+</body>
+</html>
