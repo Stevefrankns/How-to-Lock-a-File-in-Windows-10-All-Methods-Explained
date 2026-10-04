@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://how-to-lock-a-file-in-windows-10.vercel.app/sitemap.xml
